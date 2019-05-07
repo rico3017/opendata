@@ -6,7 +6,7 @@ from urllib import parse
 
 mod = Blueprint("london", __name__, url_prefix="/london")
 
-
+'''
 @mod.route("/streets/", methods = ["POST", "GET"])
 def streets():
     try:
@@ -30,9 +30,11 @@ def streets():
         err_msg = traceback.format_exc()
         mylog(msg = "/london/streets:" + err_msg, file = "error.log", handler = 0b10)
         return jsonify(msg = "Error!", result = results)
+'''
 
-@mod.route("/latlon/", methods = ["POST", "GET"])
-def latlon():
+
+@mod.route("/nearbyTrans/", methods = ["POST", "GET"])
+def nearbyTrans():
     try:
         results = []
         if "street" not in request.values:
@@ -76,7 +78,9 @@ def latlon():
                             temp.append({"lines" : var["lineIdentifier"], "mode" : var["modeName"]})
                         results.append({"groups" : temp, "id" : items["naptanId"], "name" : items["commonName"], "lat" : items["lat"], "lon" : items["lon"]})
                 else:
-                    msg = "Api fail"
+                    msg = "Api fail!"
+            else:
+                msg = "No bus data!"
         else:
             msg = "Api fail!"
         return jsonify(msg = msg, result = results)
@@ -84,3 +88,27 @@ def latlon():
         err_msg = traceback.format_exc()
         mylog(msg = "/london/streets:" + err_msg, file = "error.log", handler = 0b10)
         return jsonify(msg = "Error!", result = results)
+
+@mod.route("/getloc/", methods = ["POST", "GET"])
+def getloc():
+    try :
+        result = {}
+        if "postcode" not in request.values:
+            abort(416)
+        url = apis["postcode"] + "/postcodes/" +  request.values["postcode"].upper()
+        res = requests.get(url)
+        mylog(msg = "request url:" + url + "|" + "/london/streets:" + str(res.content), file = "receive.log", handler = 0b10)
+        if res.status_code == 200:
+            dic = res.json()
+            result["lon"] = dic["result"]["longitude"]
+            result["lat"] = dic["result"]["latitude"]
+        elif res.status_code == 404:
+            msg = "Invalid postcode!"
+        else:
+            msg = "Api fail!"
+        return jsonify(msg = msg, result = result)
+
+    except:
+        err_msg = traceback.format_exc()
+        mylog(msg = "/london/streets:" + err_msg, file = "error.log", handler = 0b10)
+        return jsonify(msg = "Error!", result = result) 

@@ -46,7 +46,7 @@ def price():
             else:
                 msg = "No more data!"
             for item in items:
-                results.append({"price" : item["pricePaid"], "address" : item["propertyAddress"], "new" : item["newBuild"]})
+                results.append({"price" : item["pricePaid"], "address" : item["propertyAddress"], "new" : item["newBuild"], "street" : item["propertyAddress"]["street"]})
         else:
             msg = "Api fail!"
         return jsonify(msg = msg, result = results)

@@ -7,7 +7,8 @@ SECRET_KEY = "testkey"
 
 apis = {
         "property_url" : "http://landregistry.data.gov.uk/data/ppi/transaction-record.json",
-        "ttl" : "https://api.tfl.gov.uk"
+        "ttl" : "https://api.tfl.gov.uk", 
+        "postcode" : "https://postcodes.io"
 }
 
 page_size = 50
