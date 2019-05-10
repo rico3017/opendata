@@ -2,3 +2,4 @@ flask
 mysql-connector
 gevent
 sqlalchemy
+requests
