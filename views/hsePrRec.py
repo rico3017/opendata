@@ -40,7 +40,7 @@ def price():
             dic = res.json()
             items = dic["result"]["items"]
             if len(items) > 0:
-                msg = "success"
+                msg = "Success!"
             elif params["_page"] == 0:
                 msg = "No results!"
             else:

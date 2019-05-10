@@ -8,7 +8,8 @@ SECRET_KEY = "testkey"
 apis = {
         "property_url" : "http://landregistry.data.gov.uk/data/ppi/transaction-record.json",
         "ttl" : "https://api.tfl.gov.uk", 
-        "postcode" : "https://postcodes.io"
+        "postcode" : "https://postcodes.io",
+        "police" : "https://data.police.uk/api"
 }
 
 page_size = 50
@@ -17,7 +18,7 @@ db = {"host":"127.0.0.1",
         "user":"root",
         "password":'root',
         "port":3306 ,
-        "database":"house",
+        "database":"open_data",
         "charset":"utf8"
         }
 

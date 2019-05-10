@@ -3,6 +3,7 @@ from myconfig import page_size, apis, app_id, app_key
 from myutil.mylog import mylog
 import requests, datetime, json, traceback
 from urllib import parse
+from model.Network import Network
 
 mod = Blueprint("london", __name__, url_prefix="/london")
 
@@ -62,7 +63,7 @@ def nearbyTrans():
                 res2 = requests.get(url2, params = params)
                 mylog(msg = "request url:" + url2 + "|" + "/london/streets:" + str(res2.content), file = "receive.log", handler = 0b10)
                 if res2.status_code == 200:
-                    msg = "success"
+                    msg = "Success!"
                     items = res2.json()
                     if stop > 1:
                         for item in items:
@@ -89,7 +90,7 @@ def nearbyTrans():
         mylog(msg = "/london/streets:" + err_msg, file = "error.log", handler = 0b10)
         return jsonify(msg = "Error!", result = results)
 
-@mod.route("/getloc/", methods = ["POST", "GET"])
+@mod.route("/getLoc/", methods = ["POST", "GET"])
 def getloc():
     try :
         result = {}
@@ -99,6 +100,7 @@ def getloc():
         res = requests.get(url)
         mylog(msg = "request url:" + url + "|" + "/london/streets:" + str(res.content), file = "receive.log", handler = 0b10)
         if res.status_code == 200:
+            msg = "Success!"
             dic = res.json()
             result["lon"] = dic["result"]["longitude"]
             result["lat"] = dic["result"]["latitude"]
@@ -111,4 +113,65 @@ def getloc():
     except:
         err_msg = traceback.format_exc()
         mylog(msg = "/london/streets:" + err_msg, file = "error.log", handler = 0b10)
-        return jsonify(msg = "Error!", result = result) 
+        return jsonify(msg = "Error!", result = result)
+
+
+@mod.route("/getNetwork/", methods = ["POST", "GET"])
+def getNetwork():
+    try :
+        if "postcode" not in request.values:
+            abort(416)
+        postcode =   request.values["postcode"].upper().replace(' ', '')
+        result = Network.query.filter(Network.postcode == postcode).first()
+        if result:
+            return jsonify(msg = "Success!", result = {"postcode" : result.postcode, "avg_download" : result.avg_download, "avg_upload" : result.avg_upload} )
+        else:
+            return jsonify(msg =  "No data!", result = {})
+    except:
+        err_msg = traceback.format_exc()
+        mylog(msg = "/london/streets:" + err_msg, file = "error.log", handler = 0b10)
+        return jsonify(msg = "Error!", result = {})
+
+
+
+@mod.route("/getCrime/", methods = ["POST", "GET"])
+def getCrime():
+    try :
+        params = {}
+        if "latitude" not in request.values or "longitude" not in request.values:
+            abort(416)
+        params["lat"] = request.values["latitude"]
+        params["lng"] = request.values["longitude"]
+        now = datetime.datetime.now()
+        start_month = now.month - 2
+        date = "%s-%s" % (now.year, start_month)
+        if "datetime" not in request.values:
+            params["date"] = date
+        else:
+            params["date"] = request.values["datetime"]
+        url = apis["police"] + "/crimes-street/all-crime"
+        this_year_months = ["%s-%s" % (now.year, month) for month in range(1, start_month + 1)]
+        last_year = now.year - 1
+        last_year_months = ["%s-%s" % (last_year, month) for month in range(start_month + 1, 13)]
+        one_year = last_year_months + this_year_months
+        mylog(msg ="request url:" + url + "|" + "/london/getCrime:" + json.dumps(params) + '|', file = "send.log", handler = 0b10)
+        res = requests.get(url, params = params)
+        mylog(msg = "request url:" + url + "|" + "/london/getCrime:" + str(res.content), file = "receive.log", handler = 0b10)
+        if res.status_code == 200:
+            result = {}
+            results = res.json()
+            for dic in results:
+                if dic["category"] in result:
+                    result[dic["category"]] += 1
+                else:
+                    result[dic["category"]] = 1
+            return jsonify(msg = "Success!", result = result)
+        elif res.status_code == 503:
+            return jsonify(msg = "More than 10000!", result = {})
+        else:
+            msg = "Api fail!"
+            return jsonify(msg = msg, result = {})
+    except:
+        err_msg = traceback.format_exc()
+        mylog(msg = "/london/streets:" + err_msg, file = "error.log", handler = 0b10)
+        return jsonify(msg = "Error!", result = {})
