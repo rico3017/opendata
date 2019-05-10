@@ -165,7 +165,7 @@ def getCrime():
                     result[dic["category"]] += 1
                 else:
                     result[dic["category"]] = 1
-            return jsonify(msg = "Success!", result = result)
+            return jsonify(msg = "Success!", result = result, one_year = one_year)
         elif res.status_code == 503:
             return jsonify(msg = "More than 10000!", result = {})
         else:
