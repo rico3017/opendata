@@ -14,7 +14,7 @@ app = Flask(__name__, static_url_path='')
 app.register_blueprint(hsePrRec.mod)
 app.register_blueprint(londonMap.mod)
 
-@app.route('/')
+@app.route('/home')
 def www():
     return render_template('htdocs/index.html'), 200
 

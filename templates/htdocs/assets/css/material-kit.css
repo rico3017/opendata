@@ -18099,3 +18099,28 @@ footer .pull-center {
 #search_result tr.header, #search_result tr:hover {
   background-color: #f1f1f1;
 }
+
+#table-wrapper {
+  position:relative;
+}
+#table-scroll {
+  height:375px;
+  overflow:auto;  
+  margin-top:0px;
+}
+#table-wrapper table {
+  width:100%;
+
+}
+#table-wrapper table * {
+  background:white;
+  color:black;
+}
+#table-wrapper table thead th .text {
+  position:absolute;   
+  top:-20px;
+  z-index:2;
+  height:20px;
+  width:35%;
+  border:1px solid black;
+}
