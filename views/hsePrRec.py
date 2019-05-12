@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request,abort
 from myconfig import page_size, apis
 from myutil.mylog import mylog
 import requests, datetime, json, traceback
+from model.Avgprice import Avgprice
 
 
 mod = Blueprint("house", __name__, url_prefix="/house")
@@ -56,6 +57,27 @@ def price():
         return jsonify(msg = "Internal error!", result = results)
 
         
-
-
+@mod.route("/avgPrice/", methods = ["POST", "GET"])
+def avgPrice():
+    try:
+        results = []
+        if "postcode" not in request.values:
+            abort(416)
+        n = request.values['postcode'].find(' ')
+        postcode = request.values['postcode'][:n + 2]
+        res = Avgprice.query.filter(Avgprice.postcode == postcode).all()
+        if len(res):
+            for result in res:
+                if result.isnew == 1:
+                    new = 'True'
+                else:
+                    new = 'False'
+                results.append({"postcode" : result.postcode, "avg_price" : result.price, "type" : result.type, 'new' : new})
+            return jsonify(msg = "Success!", result =  results)
+        else:
+            return jsonify(msg =  "No data!", result = {})
+    except:
+        err_msg = traceback.format_exc()
+        mylog(msg = "/house/price:" + err_msg, file = "error.log", handler = 0b10)
+        return jsonify(msg = "Internal error!", result = results)
 
