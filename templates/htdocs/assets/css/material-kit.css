@@ -18064,3 +18064,38 @@ footer .pull-center {
 }
 
 /*# sourceMappingURL=kit-free.css.map */
+
+* {
+  box-sizing: border-box;
+}
+
+#search_result {
+  background-image: url('/css/searchicon.png');
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+#search_result {
+  border-collapse: collapse;
+  width: 100%;
+  border: 1px solid #ddd;
+  font-size: 18px;
+}
+
+#search_result th, #search_result td {
+  text-align: left;
+  padding: 12px;
+}
+
+#search_result tr {
+  border-bottom: 1px solid #ddd;
+}
+
+#search_result tr.header, #search_result tr:hover {
+  background-color: #f1f1f1;
+}

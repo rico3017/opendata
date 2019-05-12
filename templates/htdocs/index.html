@@ -34,36 +34,69 @@
   <div id="header"></div>
   
   <main>
+
+  
   <div class="page-header header-filter clear-filter purple-filter" data-parallax="true" style="background-image: url('./assets/img/profile_city1.jpg');">
     <div class="container">
       <div class="row">
-        <div class="col-md-10  ml-auto  mr-auto">
+	  
+        <div class="col-md-10  ml-auto  mr-auto form-group">
+			<div class="form-check disabled">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="radio" value="" disabled> Street name 
+                  <span class="circle">
+                    <span class="check"></span>
+                  </span>
+                </label> 
+				<label class="form-check-label">
+                  <input class="form-check-input" type="radio" value="" disabled checked> Postcode 
+                  <span class="circle">
+                    <span class="check"></span>
+                  </span>
+                </label>
+            </div>
           <div class="form-group">
             <label for="exampleInput1" class="bmd-label-floating navbar-brand">Search</label>
                 <input type="search" class="form-control" id="search_input">
             <span class="bmd-help" style="color: white" id="search_hints">Enter a Postcode to continue</span>
           </div>
         </div>
-		<div class="col-md-2" align="right">
-			<br>
-			<button class="btn btn-info" onlick="">Search</button>
+		<div class="col-md-2 form-group" align="right">
+			<br><br>
+			<button class="btn btn-info" onclick="locationDetails()">Search</button>
 		</div>
+		
       </div>
     </div>
   </div>
   <div class="container">
     <div class="main main-raised" >
-		<div>
+		<div id="search_target">
 		</div>
-        <table id="search_result">
-			<tbody>
-				<tr>
-					<td>
-						No Records.
-					</td>
-				</tr>
-			</tbody>
-		</table>
+		<div class="progress progress-line-info">
+			<div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 60%;" id="search_progressbar">
+			  <span class="sr-only">Loading</span>
+			</div>
+		</div>
+		<div>
+			<table id="search_result" style="width: 100%;">
+				<tbody>
+					<tr>
+						<td>
+							
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Loading...
+						</td>
+					</tr>
+					
+				</tbody>
+			</table>
+		</div>
+		
+        
     </div>
     <div class="section cd-section" id="advertismentComponents">
       <div class="container">
@@ -118,11 +151,72 @@
 
   </script>
   <script>
-    d3.json("/price", function(error, routes) {
-      routes.forEach(function(route) {
-        console.log(route)
-      });
-    });
+	function refreshSearch() {
+		document.getElementById("search_target").innerHTML = "";
+		document.getElementById("search_result").innerHTML = "<tbody><tr><td>Loading...</td></tr></tbody>";
+		var postcode = document.getElementById("search_input").value;
+		var icon = "<div class=\"alert-icon\"><i class=\"material-icons\">info_outline</i></div>";
+		var msg = "";
+		var contsiner = "";
+		var alert_info = "";
+		if(postcode == "") {
+			postcode = "NW8 9TX";
+			msg = "Your current location: " + postcode;
+			contsiner = "<div class=\"container\">" + icon + msg + "</div>";
+			alert_info = "<div class=\"alert alert-info\">" + contsiner + "</div>";
+			document.getElementById("search_target").innerHTML = alert_info;
+		}else {
+			msg = "Searched postcode: " + postcode;
+			contsiner = "<div class=\"container\">" + icon + msg + "</div>";
+			alert_info = "<div class=\"alert alert-success\">" + contsiner + "</div>";
+			document.getElementById("search_target").innerHTML = alert_info;
+		}
+		d3.json("{{ url_for('house.price') }}" + "?postcode=" + postcode, function(error, data) {
+			if (data['result'] === undefined || data['result'].length == 0) {
+				alert_info = "<div class=\"alert alert-danger\">" + contsiner + "</div>";
+				document.getElementById("search_target").innerHTML = alert_info;
+				document.getElementById("search_result").innerHTML = "<tbody><tr><td>No records.</td></tr></tbody>";
+			}else {
+				table_content = "<tbody><tr class=\"header\"><th>Price</th><th>Street</th><th>Transaction Date</th></tr>";
+				
+				for (i = 0; i < 5 && i < data['result'].length; i++) {
+					property = data['result'][i];
+					table_content += "<tr>";
+						table_content += "<td>";
+							table_content += property["price"];
+						table_content += "</td>";
+						table_content += "<td>";
+							table_content += property["street"];
+						table_content += "</td>";
+						table_content += "<td>";
+							table_content += property["transaction_date"];
+						table_content += "</td>";
+					table_content += "</tr>";
+				}
+				/*
+				data['result'].forEach(function(property) {
+					table_content += "<tr>";
+						table_content += "<td>";
+							table_content += property["price"];
+						table_content += "</td>";
+						table_content += "<td>";
+							table_content += property["street"];
+						table_content += "</td>";
+						table_content += "<td>";
+							table_content += property["transaction_date"];
+						table_content += "</td>";
+					table_content += "</tr>";
+				});
+				*/
+				table_content += "</tbody>";
+				document.getElementById("search_result").innerHTML = table_content;
+			}
+		});
+	}
+	function locationDetails() {
+		location.href = "./location?postcode=" + document.getElementById("search_input").value;
+	}
+    refreshSearch();
   </script>
 </body>
 
