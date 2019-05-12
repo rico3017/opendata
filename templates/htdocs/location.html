@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="apple-touch-icon" sizes="76x76" href="./assets/img/apple-icon.png">
+  <link rel="icon" type="image/png" href="./assets/img/favicon.png">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <title>
+    {% block title %}{% endblock %}Open Finder - Your Properties Finder in London
+  </title>
+  <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
+  <!--     Fonts and icons     -->
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
+  <!-- CSS Files -->
+  <link href="./assets/css/material-kit.css?v=2.0.5" rel="stylesheet" />
+  <!-- CSS Just for demo purpose, don't include it in your project -->
+  <link href="./assets/demo/demo.css" rel="stylesheet" />
+</head>
+
+<!-- Global Header and Footer -->
+<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+<script> 
+    $(function(){
+        $("#header").load("./commons/header.html");
+        $("#footer").load("./commons/footer.html");
+    });
+</script> 
+
+<body class="index-page sidebar-collapse">
+  <div id="header"></div>
+  
+  <main>
+  <div class="section section-white">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-10  ml-auto  mr-auto">
+          <div class="form-group">
+            <label for="exampleInput1" class="bmd-label-floating navbar-brand">Search</label>
+                <input type="search" class="form-control" id="search_input">
+            <span class="bmd-help" style="color: white" id="search_hints">Enter a Postcode to continue</span>
+          </div>
+        </div>
+		<div class="col-md-2" align="right">
+			<br>
+			<button class="btn btn-info" onlick="">Search</button>
+		</div>
+      </div>
+    </div>
+  </div>
+    <div class="cd-section" id="image_details">
+      <div class="container">
+        <!--                 modals -->
+        <div class="row" id="modals">
+			<div class="col-md-6">
+				<div class="card card-nav-tabs">
+					<div class="card-header card-header-primary">
+					  <!-- colors: "header-primary", "header-info", "header-success", "header-warning", "header-danger" -->
+					  <div class="nav-tabs-navigation">
+						<div class="tab-pane active">
+						  POSTCODE
+						</div>
+					  </div>
+					</div>
+					<div class="card-body" >
+					  <div class="tab-content text-left">
+						<table id="location_details">
+							<tbody>
+								<tr><td width="30%">Number<td><td width="70%">Number</td></tr>
+								<tr><td width="30%">Street<td><td width="70%">STREET</td></tr>
+							</tbody>
+						</table>
+					  </div>
+					</div>
+				</div>
+			</div>
+          <div class="col-md-6">
+			  <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" data-interval="3000">
+				<ol class="carousel-indicators">
+				  <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+				  <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+				</ol>
+				<div class="carousel-inner">
+				  <div class="carousel-item active">
+					<img class="d-block w-100" src="./imgs/house0.png" alt="First slide">
+					<div class="carousel-caption d-none d-md-block">
+					  <h4>
+						<i class="material-icons">schedule</i> 2015, provided by COMP6214 Agency .Ltd
+					  </h4>
+					</div>
+				  </div>
+				  <div class="carousel-item">
+					<img class="d-block w-100" src="./imgs/house1.png" alt="Second slide">
+					<div class="carousel-caption d-none d-md-block">
+					  <h4>
+						<i class="material-icons">schedule</i> 2009, uploaded by Rico on Google Map.
+					  </h4>
+					</div>
+				  </div>
+				</div>
+				<a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+				  <i class="material-icons">keyboard_arrow_left</i>
+				  <span class="sr-only">Previous</span>
+				</a>
+				<a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+				  <i class="material-icons">keyboard_arrow_right</i>
+				  <span class="sr-only">Next</span>
+				</a>
+			  </div>
+          </div>
+          
+        </div>
+        <!--                 end modals	             -->
+      </div>
+    </div>
+	<div class="section cd-section" id="image_details">
+      <div class="container">
+        <!--                 modals -->
+        <div class="row" id="modals">
+          <div class="col-md-6">
+			<iframe width="480" height="480" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.openstreetmap.org/export/embed.html?bbox=-1.4022481441497803%2C50.93230676956965%2C-1.3906610012054443%2C50.93806739952225&amp;layer=mapnik&amp;marker=50.935187173743714%2C-1.3964545726776123" style="border: 1px solid black"></iframe>
+			<br/>
+			<small>
+				<a href="https://www.openstreetmap.org/?mlat=50.93519&amp;mlon=-1.39645#map=17/50.93519/-1.39645">View Larger Map</a>
+			</small>
+          </div>
+          <div class="col-md-6">
+			  <!-- Tabs on Plain Card -->
+              <div class="card card-nav-tabs card-plain">
+                <div class="card-header card-header-warning">
+                  <!-- colors: "header-primary", "header-info", "header-success", "header-warning", "header-danger" -->
+                  <div class="nav-tabs-navigation">
+                    <div class="nav-tabs-wrapper">
+                      Comments
+                    </div>
+                  </div>
+                </div>
+                <div class="card-body ">
+                  <div class="tab-content text-center">
+					Do you wanna know more about how's the others think about this property?
+					<br>
+					<a href="./constructing">Login</a> to get access to the comments or <a href="./constructing">register</a>
+                    <img src="./imgs/comments.png" alt="Advertisment" class="rounded img-fluid">
+                  </div>
+                </div>
+              </div>
+              <!-- End Tabs on plain Card -->
+          </div>
+        </div>
+        <!--                 end modals	             -->
+      </div>
+    </div>
+ 
+  </main>
+  
+  <div id="footer"></div>
+  
+  <!--   Core JS Files   -->
+  <script src="./assets/js/core/jquery.min.js" type="text/javascript"></script>
+  <script src="./assets/js/core/popper.min.js" type="text/javascript"></script>
+  <script src="./assets/js/core/bootstrap-material-design.min.js" type="text/javascript"></script>
+  <script src="./assets/js/plugins/moment.min.js"></script>
+  <!--	Plugin for the Datepicker, full documentation here: https://github.com/Eonasdan/bootstrap-datetimepicker -->
+  <script src="./assets/js/plugins/bootstrap-datetimepicker.js" type="text/javascript"></script>
+  <!--  Plugin for the Sliders, full documentation here: http://refreshless.com/nouislider/ -->
+  <script src="./assets/js/plugins/nouislider.min.js" type="text/javascript"></script>
+  <!--  Google Maps Plugin    -->
+  <!-- <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script> -->
+  <!-- Control Center for Material Kit: parallax effects, scripts for the example pages etc -->
+  <script src="./assets/js/material-kit.js?v=2.0.5" type="text/javascript"></script>
+  <script>
+    $(document).ready(function() {
+      //init DateTimePickers
+      materialKit.initFormExtendedDatetimepickers();
+
+      // Sliders Init
+      materialKit.initSliders();
+    });
+
+
+    function scrollToDownload() {
+      if ($('.section-download').length != 0) {
+        $("html, body").animate({
+          scrollTop: $('.section-download').offset().top
+        }, 1000);
+      }
+    }
+
+  </script>
+</body>
+
+</html>
