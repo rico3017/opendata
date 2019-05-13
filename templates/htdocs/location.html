@@ -50,6 +50,18 @@
       </div>
     </div>
   </div>
+  <div class="">
+    <div class="text-center">
+        <div class="row">
+          <div class="col-md-8 ml-auto mr-auto text-center">
+			<h2 id="location_postcode"></h2>
+			<div id="avgPrice">
+				Loading...
+			</div>
+			<div id="getCrime"></div>
+		  </div>
+		</div>
+	</div>
     <div class="cd-section" id="image_details">
       <div class="container">
         <!--                 modals -->
@@ -59,14 +71,13 @@
 					<div class="card-header card-header-primary">
 					  <!-- colors: "header-primary", "header-info", "header-success", "header-warning", "header-danger" -->
 					  <div class="nav-tabs-navigation">
-						<div class="tab-pane active" id="location_postcode">
-						  Location
+						<div class="tab-pane active">
+						  Transaction Records
 						</div>
 					  </div>
 					</div>
 					<div class="card-body" >
 					  <div class="tab-content text-left">
-						<h5>Transaction Records</h5>
 						<div id="table-wrapper">
 							<div id="table-scroll">
 								<table id="search_result">
@@ -121,6 +132,42 @@
         <!--                 end modals	             -->
       </div>
     </div>
+	<div class="container">
+		<div class="main " >
+		
+		<div class="col-lg-6 col-md-12">
+		  <div class="row">
+			<div class="col-md-3">
+			  <ul class="nav nav-pills nav-pills-icons flex-column " role="tablist">
+				<!--
+									color-classes: "nav-pills-primary", "nav-pills-info", "nav-pills-success", "nav-pills-warning","nav-pills-danger"
+								-->
+				<li class="nav-item">
+				  <a class="nav-link active" href="#dashboard-2" role="tab" data-toggle="tab">
+					<i class="material-icons">settings</i>Internet
+				  </a>
+				</li>
+				<li class="nav-item">
+				  <a class="nav-link" href="#schedule-2" role="tab" data-toggle="tab">
+					<i class="material-icons">warning</i>Crime
+				  </a>
+				</li>
+			  </ul>
+			</div>
+			<div class="col-md-8">
+			  <div class="tab-content text-center center">
+				<div class="tab-pane active" id="dashboard-2">
+					<div id="getNetwork">Loading...</div>
+				</div>
+				<div class="tab-pane" id="schedule-2">
+					<div id="getCrimes">Loading...</div>
+				</div>
+			  </div>
+			</div>
+		  </div>
+		</div>
+		</div>
+	</div>
 	<div class="section cd-section" id="image_details">
       <div class="container">
         <!--                 modals -->
@@ -160,9 +207,9 @@
     </div>
 	<div class="container">
 		<div class="main main-raised" >
-          <h3>Trasportation</h3>
+          <h3>Trasportation Nearby</h3>
 			<div>
-				<table id="transporation_result" style="width: 100%;">
+				<table id="transportation_result" style="width: 100%;">
 					<tbody>
 						<tr>
 							<td>
@@ -222,59 +269,100 @@
 	var url = new URL(location.href);
 	var postcode="";
 	var street="";
+	var lat="0";
+	var loc="0";
+	postcode = url.searchParams.get("postcode");
+	if (postcode === undefined || postcode=="") {
+		location.replace("./home?message=err");
+	}
 	
 	function getHousePrice() {
 		var chkbox_yes = "<div class=\"form-check disabled\">" + "<label class=\"form-check-label\">" + "<input class=\"form-check-input\" type=\"checkbox\" disabled checked>" + "<span class=\"form-check-sign\">" + "<span class=\"check\"></span>"  + "</span>" + "</label>" + "</div>";
 		var chkbox_no = "<div class=\"form-check disabled\">" + "<label class=\"form-check-label\">" + "<input class=\"form-check-input\" type=\"checkbox\" disabled>" + "<span class=\"form-check-sign\">" + "<span class=\"check\"></span>"  + "</span>" + "</label>" + "</div>";
 	
-		postcode = url.searchParams.get("postcode");
-		if (postcode === undefined || postcode=="") {
-			location.replace("./home?message=err");
-			
-		}else {
-			d3.json("{{ url_for('house.price') }}" + "?postcode=" + postcode, function(error, data) {
-				if (data['result'] === undefined || data['result'].length == 0) {
-					alert_info = "<div class=\"alert alert-danger\">" + contsiner + "</div>";
-					document.getElementById("search_target").innerHTML = alert_info;
-					document.getElementById("search_result").innerHTML = "<tbody><tr><td>No records.</td></tr></tbody>";
-					
-				}else {
-					table_content = "<tr class=\"header\"><thead><th>PO</th><th>£</th><th>No.</th><th>Date</th></thead></tr><tbody>";
-					disp_loc ="";
-					for (i = 0; i < data['result'].length; i++) {
-						property = data['result'][i];
-						street = property["address"]["street"];
-						disp_loc = property["address"]["street"] + " (" + property["address"]["postcode"] + ")";
-						
-						table_content += "<tr>";
-							table_content += "<td>";
-								if (property["new"] == "false") {
-									table_content += chkbox_yes;
-								}else {
-									table_content += chkbox_no;
-								}
-							table_content += "</td>";
-							table_content += "<td>";
-								table_content += property["price"];
-							table_content += "</td>";
-							table_content += "<td>";
-								table_content += property["address"]["saon"];
-							table_content += "</td>";
-							table_content += "<td>";
-								table_content += property["transaction_date"];
-							table_content += "</td>";
-						table_content += "</tr>";
-					}
-					table_content += "</tbody>";
-					document.getElementById("search_result").innerHTML = table_content;
-					document.getElementById("location_postcode").innerHTML = disp_loc;
-				}
-			});
-		}
 		
+		d3.json("{{ url_for('house.price') }}" + "?postcode=" + postcode, function(error, data) {
+			if (data['result'] === undefined || data['result'].length == 0) {
+				alert_info = "<div class=\"alert alert-danger\">" + contsiner + "</div>";
+				document.getElementById("search_target").innerHTML = alert_info;
+				document.getElementById("search_result").innerHTML = "<tbody><tr><td>No records.</td></tr></tbody>";
+				
+			}else {
+				table_content = "<tr class=\"header\"><thead><th>PO</th><th>£</th><th>No.</th><th>Date</th></thead></tr><tbody>";
+				disp_loc ="";
+				for (i = 0; i < data['result'].length; i++) {
+					property = data['result'][i];
+					street = property["address"]["street"];
+					disp_loc = property["address"]["street"] + " (" + property["address"]["postcode"] + ")";
+					
+					table_content += "<tr>";
+						table_content += "<td>";
+							if (property["new"] == "false") {
+								table_content += chkbox_yes;
+							}else {
+								table_content += chkbox_no;
+							}
+						table_content += "</td>";
+						table_content += "<td>";
+							table_content += property["price"];
+						table_content += "</td>";
+						table_content += "<td>";
+							table_content += property["address"]["saon"];
+						table_content += "</td>";
+						table_content += "<td>";
+							table_content += property["transaction_date"];
+						table_content += "</td>";
+					table_content += "</tr>";
+				}
+				table_content += "</tbody>";
+				document.getElementById("search_result").innerHTML = table_content;
+				document.getElementById("location_postcode").innerHTML = disp_loc;
+				
+			}
+			
+			getTransporation();
+		});
+	
 		getLocationGPS();
-		getTransporation();
+		
 	}
+	
+	function getAvgPrice() {
+		var pheader="<table><tr><thead>";
+		var pbody="<tbody><tr>"
+		
+		d3.json("{{ url_for('house.avgPrice') }}" + "?postcode=" + postcode, function(error, data) {
+			if (data['result'].length == 0) {
+				pheader+="<th></th>";
+				pbody+="<td>No Average Sales Data</td>";
+			}else {
+				pheader+="<th></th>";
+				pbody+="<td>avg. of sales</td>";
+				data['result'].forEach(function(avgp){
+					pheader+="<th>" + avgp['type'] + "</th>";
+				pbody+="<td>£" + avgp['avg_price']  + "</td>";
+				});
+			}
+			pbody += "</tr></tbody>" + "</thead></tr>";
+			pheader += pbody;
+			document.getElementById("avgPrice").innerHTML = pheader;
+		});
+		
+	}
+	
+	function getNetwork() {
+		var nheader="<table><tr><thead>";
+		var nbody="<tbody><tr>"
+		
+		d3.json("{{ url_for('london.getNetwork') }}" + "?postcode=" + postcode, function(error, data) {
+			nheader+="<th>Average Upload Speed</th><th>Average Download Speed</th></thead></tr>";
+			nbody+="<td>" + data['result']['avg_download'] + "(Mbps)</td><td>" + data['result']['avg_upload'] + "(Mbps)</td></tr></tbody></table>";
+			nheader+=nbody;
+			document.getElementById("getNetwork").innerHTML = nheader;
+		});
+		
+	}
+	
 	
 	function getLocationGPS() {
 		d3.json("{{ url_for('london.getloc') }}" + "?postcode=" + postcode, function(error, data) {
@@ -287,7 +375,25 @@
 			btnurl="https://www.openstreetmap.org/?mlat=" + lat + "&mlon=" + lon + "#map=17/" + lat + "/" + lon;
 			document.getElementById("londonmap").setAttribute('src', mapurl);
 			document.getElementById("btn_londonmap").setAttribute('onclick', "window.open('" + btnurl + "','_blank')");
+			
+			getCrime();
 		});
+		
+	}
+	
+	function getCrime() {
+		//http://127.0.0.1:5000/london/getCrime/?latitude=51.9&longitude=-0.7
+		var cheader="<table><tr><thead>";
+		var cbody="<tbody><tr>"
+		
+		d3.json("{{ url_for('london.getCrime') }}" + "?latitude=" + lat + "&longitude=" + lon, function(error, data) {
+			cheader+="<th>Anti-social</th><th>Criminal Damage</th><th>Drugs</th><th>Public Disorder</th><th>Violent</th></thead></tr>";
+			cbody+="<td>" + data['result']['anti-social-behaviour'] + "</td><td>" + data['result']['criminal-damage-arson'] + "</td><td>" + data['result']['drugs'] + "</td><td>" + data['result']['public-order'] + "</td><td>" + data['result']['violent-crime'] + "</td></tr></tbody></table><br>Data gathered from " + data["one_year"][0] + " to " + data["one_year"][data["one_year"].length-1];
+			cheader+=cbody;
+			console.log(cheader);
+			document.getElementById("getCrimes").innerHTML = cheader;
+		});
+		
 	}
 	
 	function getTransporation() {
@@ -297,13 +403,11 @@
 				console.log(data);
 				console.log("Helloworld");
 			}else{
+				table_content = "<tr class=\"header\"><thead><th>Stop/ Station</th><th>Type(s)</th><th>Route(s)</th></thead></tr><tbody>";
 				data['result'].forEach(function(transport){
-					table_content = "<tr class=\"header\"><thead><th>Station</th><th>Type(s)</th><th>Route(s)</th></thead></tr><tbody>";
 					table_content += "<tr>";
 						table_content += "<td rowspan=" + transport["groups"].length + ">";
-							if (transport["name"] == "false") {
-								table_content += chkbox_no;
-							}
+							table_content += transport["name"];
 						table_content += "</td>";
 						table_content += "<td>";
 							table_content += transport["groups"][0]["mode"];
@@ -339,7 +443,8 @@
 	//http://127.0.0.1:5000/london/nearbyTrans/?street=FINCHLEY%20ROAD
 	//http://localhost:5000/london/getCrime/?latitude=52.629729&longitude=-1.131592&date=2017-01
 	getHousePrice();
-	
+	getAvgPrice();
+	getNetwork();
   </script>
 </body>
 
