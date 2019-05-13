@@ -45,7 +45,7 @@
         </div>
 		<div class="col-md-2" align="right">
 			<br>
-			<button class="btn btn-info" onlick="">Search</button>
+			<button class="btn btn-info" onclick="locationDetails()">Search</button>
 		</div>
       </div>
     </div>
@@ -399,9 +399,7 @@
 	function getTransporation() {
 		d3.json("./london/nearbyTrans/" + "?street=" + street, function(error, data) {
 			if (data['result'].length == 0) {
-				console.log("./london/nearbyTrans/" + "?street=" + street);
-				console.log(data);
-				console.log("Helloworld");
+				document.getElementById("transportation_result").innerHTML = "<tr class=\"header\"><tbody><td>No Public Transportation is Nearby</td></tbody></tr>";
 			}else{
 				table_content = "<tr class=\"header\"><thead><th>Stop/ Station</th><th>Type(s)</th><th>Route(s)</th></thead></tr><tbody>";
 				data['result'].forEach(function(transport){
@@ -438,6 +436,10 @@
 				document.getElementById("transportation_result").innerHTML = table_content;
 			}
 		});
+	}
+	
+	function locationDetails() {
+		location.href = "{{ url_for('location') }}" + "?postcode=" + document.getElementById("search_input").value;
 	}
 	
 	//http://127.0.0.1:5000/london/nearbyTrans/?street=FINCHLEY%20ROAD
