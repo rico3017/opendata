@@ -7,33 +7,6 @@ from model.Network import Network
 
 mod = Blueprint("london", __name__, url_prefix="/london")
 
-'''
-@mod.route("/streets/", methods = ["POST", "GET"])
-def streets():
-    try:
-        results = []
-        if "postcode" not in request.values:
-            abort(416)
-        params = {}
-        params["app_id"] = app_id
-        params["app_key"] = app_key
-        url = apis["ttl"] + "/Place/Address/Streets/" + request.values["postcode"].upper()
-        mylog(msg = "/london/streets:" + json.dumps(params) + '|' + request.values["postcode"], file = "send.log", handler = 0b10)
-        res = requests.get(url, params = params)
-        mylog(msg = "/london/streets:" + str(res.content), file = "receive.log", handler = 0b10)
-        if res.status_code == 200:
-            msg = "success"
-        else:
-            msg = "Api fail!"
-        results = res.json()
-        return jsonify(msg = msg, result = results)
-    except Exception as e:
-        err_msg = traceback.format_exc()
-        mylog(msg = "/london/streets:" + err_msg, file = "error.log", handler = 0b10)
-        return jsonify(msg = "Error!", result = results)
-'''
-
-
 @mod.route("/nearbyTrans/", methods = ["POST", "GET"])
 def nearbyTrans():
     try:

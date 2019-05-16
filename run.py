@@ -39,6 +39,7 @@ def commons(path):
 def imgs(path):
     return send_from_directory('templates/htdocs/imgs', path)
 
+
 @app.errorhandler(404)
 def not_found(error):
     return render_template('404.html'), 404
@@ -52,4 +53,3 @@ if __name__ == "__main__":
         app.debug = True
     app.config["JSON_AS_ASCII"] = False
     app.run(host = "0.0.0.0", port=5000)
-    #databaseTest()
